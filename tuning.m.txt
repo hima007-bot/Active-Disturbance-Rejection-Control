@@ -1,0 +1,112 @@
+clc
+clear all
+h=1e-3; %simulation step size
+b0=40;
+wo=40; %acc paper: 40
+wc=150; %acc paper: 150
+kp=wc^2;kd=-2.*wc;
+sim('Motion_acc03');
+
+
+%%
+clc
+clear all
+
+b0=100;
+wo=10; %acc paper:
+w01=10;
+wc=1; %acc paper:
+wc1=1;
+
+zeta=1
+
+poly([-wo -wo  -wo])
+beta1=ans(:,2)/wo
+beta2=ans(:,3)/wo^2
+beta3=ans(:,4)/wo^3
+
+
+
+kp1=-10*wc^2;
+
+kd1=-2.*zeta.*wc;
+
+%%
+clc
+clear all
+wc1=1;
+w1=1;
+wo=10;
+b1=10;
+bo1=100;
+%%
+clc; clear; close all;
+
+% Given LADRC parameters
+wo = 12;  % Observer bandwidth
+wc = 4;   % Controller bandwidth
+n = 2;     % System order (example: second-order system)
+
+% Define Extended system matrices
+A = [0 1 0; 0 0 1;0 0 0];   % State matrix
+B = [0; 1; 0];       % Input matrix
+C = [1 0 0];        % Output matrix
+
+% Desired characteristic polynomials
+observer_poly = poly([-wo, -wo, -wo]);  % Observer characteristic equation
+controller_poly = poly([-wc, -wc, -wc]);  % Controller characteristic equation
+
+% Compute observer gain (L0)
+A_obs = [0 1 0; 0 0 1; 0 0 0];  % Transposed A matrix for observer
+C_obs = [1 0 0]';       % Transposed C matrix
+A_coeffs = poly(A_obs); % Characteristic polynomial of A_obs
+L0_coeffs = observer_poly(2:end) - A_coeffs(2:end);
+L0 = L0_coeffs';  % Convert row vector to column vector
+
+% Compute controller gain (Ko)
+A_coeffs = poly(A); % Characteristic polynomial of A
+Ko_coeffs = controller_poly(2:end) - A_coeffs(2:end);
+Ko = Ko_coeffs / B(2); % Normalize by B(2) to match system dynamics
+
+% Display results
+disp('Observer Gain (L0):');
+disp(L0);
+disp('Controller Gain (Ko):');
+disp(Ko);
+%%
+clc; clear; close all;
+
+% Given parameters
+wc = 4;  % Controller bandwidth
+wo = 12; % Observer bandwidth
+n = 2;   % Second-order system
+
+% Compute controller gain Ko
+controller_poly = poly([-wc, -wc]); % Compute (s + wc)^2
+Ko = flip(controller_poly(2:end));  % Extract coefficients and flip
+
+% Compute observer gain L0
+observer_poly = poly([-wo, -wo]); % Compute (s + wo)^2
+L0 = flip(observer_poly(2:end));  % Extract coefficients and flip
+
+% Display results
+disp('Controller Gain (Ko):');
+disp(Ko);
+disp('Observer Gain (L0):');
+disp(L0);
+%%
+clc
+clear all
+wo1=8.8;
+wc1=2.1;
+wc2=2.5;
+wo2=8.5;
+bo=1;
+%%
+clc
+clear all
+wo1=12;
+wc1=4;
+wc2=4.5;
+wo2=11.5;
+bo=100;
